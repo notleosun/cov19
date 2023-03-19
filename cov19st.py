@@ -51,12 +51,12 @@ cov19.columns = new_columns
 	cov19.columns = new_columns
 	
 	st.subheader("Cleaning Country Names ")
-	continent_dict = pd.read_csv("continents2.csv")
+	contrycode = pd.read_csv("continents2.csv")
 	st.code("""
 countrycode = pd.read_csv("continents2.csv")
 countrycode
 	""")
-	continent_dict
+	contrycode
 	
 	st.code("""
 country_dict = {
@@ -134,7 +134,7 @@ region_dict.update({
                    
 cov19["Region"] = cov19.Country.replace(region_dict)
 	""")
-	region_dict = {country:region for country, region in zip(country_dict["name"], country_dict["sub-region"])}
+	region_dict = {country:region for country, region in zip(countrycode["name"], countrycode["sub-region"])}
 	region_dict.update({
                     " Azerbaijan":"Western Asia",
                     "Bahamas  The":"Latin America and the Caribbean",
