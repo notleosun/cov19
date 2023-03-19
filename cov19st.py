@@ -202,7 +202,7 @@ continent_dict.update({
 cov19["Continent"] = cov19.Region.replace(continent_dict)
 	""")
 	continent_dict = {}
-		continent_dict.update({
+	continent_dict.update({
     'Eastern Asia':"Asia",
     'South-eastern Asia':"Asia",
     'Southern Asia':"Asia",
