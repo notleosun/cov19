@@ -19,7 +19,7 @@ with st.sidebar:
 if selected=='Data Cleaning':
 	st.title("The cleaning process: ")
 	st.subheader("Cleaning the columns ")
-	st.markdown("""	
+	st.code("""	
 def clean_col(col):
     col = col.strip()
     col = col.replace("Country/Region", "Country")
