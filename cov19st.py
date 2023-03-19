@@ -237,6 +237,6 @@ if selected=='Exploratory Analysis':
 	country_option=st.selectbox('Select a country',np.sort(cov19['Country'].unique()))
 	case_option=st.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
 	
-	fig=px.scatter(cov19[cov19['Country']==country_option],x="Date",
-            y=cov19.loc[cov19['Country']==country_option,case_option],hover_name='Date')
+	fig=px.scatter(cov19[cov19['Country']==country_option],x="ObservationDate",
+            y=cov19.loc[cov19['Country']==country_option,case_option],hover_name='ObservationDate')
 	fig.show()
