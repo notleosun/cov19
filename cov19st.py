@@ -10,16 +10,15 @@ from streamlit_option_menu import option_menu
 cov19 = pd.read_csv("covid_19_data.csv")
 
 def clean_col(col):
-    		col = col.strip()
-    		col = col.replace("Country/Region", "Country")
-    		return col
+    	col = col.strip()
+    	col = col.replace("Country/Region", "Country")
+    	return col
 
-	new_columns = []
-	for c in cov19.columns:
-    		clean_c = clean_col(c)
-    		new_columns.append(clean_c)
-    
-	cov19.columns = new_columns
+new_columns = []
+for c in cov19.columns:
+    	clean_c = clean_col(c)
+    	new_columns.append(clean_c)
+cov19.columns = new_columns
 
 countrycode = pd.read_csv("continents2.csv")
 country_dict = {
