@@ -7,7 +7,7 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 with st.sidebar: 
-	selected = option_menu(
+	selected = st.option_menu(
 		menu_title = 'Navigation Pane',
 		options = ['Abstract', 'Background Information', 'Data Cleaning','Exploratory Analysis','Data Analysis', 'Conclusion', 'Bibliography'],
 		menu_icon = 'arrow-down-right-circle-fill',
