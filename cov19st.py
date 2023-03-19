@@ -32,7 +32,7 @@ for c in cov19.columns:
     
 cov19.columns = new_columns
 	""")
-	st.subheader("Assigning Continents ")
+	st.subheader("Cleaning Country Names ")
 	continent_dict = pd.read_csv("continents2.csv")
 	st.code("""
 countrycode = pd.read_csv("continents2.csv")
@@ -55,7 +55,7 @@ country_dict = {
                    }
 cov19["Country"] = cov19.Country.replace(country_dict)	
 	""")
-	st.subheading("Assigning Regions ")
+	st.subheader("Assigning Regions ")
 	st.code("""
 region_dict = {country:region for country, region in zip(countrycode["name"], countrycode["sub-region"])}
 region_dict.update({
@@ -99,4 +99,28 @@ region_dict.update({
                    })
                    
 cov19["Region"] = cov19.Country.replace(region_dict)
+	""")
+	st.subheader("Assigning Continents ")
+	st.code("""
+continent_dict = {}
+continent_dict.update({
+    'Eastern Asia':"Asia",
+    'South-eastern Asia':"Asia",
+    'Southern Asia':"Asia",
+    'Western Asia':"Asia",
+    'Central Asia':"Asia",
+    'Western Europe':"Europe",
+    'Northern Europe':"Europe",
+    'Southern Europe':"Europe",
+    'Eastern Europe':"Europe",
+    'Northern America':"North America",
+    'Northern Africa':"Africa",
+    "Sub-Saharan Africa":"Africa",
+    'Micronesia':"Oceania",
+    "Melanesia":"Oceania",
+    "Australia and New Zealand":'Oceania',
+    "Polynesia":"Oceania",
+    "Latin America and the Caribbean":"South America"
+})
+cov19["Continent"] = cov19.Region.replace(continent_dict)
 	""")
