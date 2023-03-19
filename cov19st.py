@@ -17,7 +17,7 @@ with st.sidebar:
 		)
 	
 if selected=='Data Cleaning':
-	st.title("The cleaning process: ")
+	st.title("The Cleaning Process: ")
 	
 	st.subheader("The Original Dataset ")
 	cov19 = pd.read_csv("covid_19_data.csv")
@@ -225,3 +225,8 @@ cov19["Continent"] = cov19.Region.replace(continent_dict)
 
 	st.subheader("Cleaned Data ")
 	cov19
+
+if selected=='Exploratory Analysis':
+	st.title("Exploratory Analysis: ")
+	country_option=st.selectbox('Select a country',covid['Country/Region'].unique())
+    	case_option=st.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
