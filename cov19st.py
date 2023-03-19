@@ -18,6 +18,9 @@ with st.sidebar:
 	
 if selected=='Data Cleaning':
 	st.title("The cleaning process: ")
+	st.subheader("The Original Dataset ")
+	cov_og = pd.read_csv("covid_19_data.csv")
+	cov_og
 	st.subheader("Cleaning the columns ")
 	st.code("""	
 def clean_col(col):
@@ -124,3 +127,6 @@ continent_dict.update({
 })
 cov19["Continent"] = cov19.Region.replace(continent_dict)
 	""")
+	st.subheader("Cleaned Data ")
+	cov19 = pd.read_csv("cov_cleaned.csv")
+	cov19
