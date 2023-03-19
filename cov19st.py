@@ -134,7 +134,7 @@ region_dict.update({
                    
 cov19["Region"] = cov19.Country.replace(region_dict)
 	""")
-	region_dict = {country:region for country, region in zip(countrycode["name"], countrycode["sub-region"])}
+	region_dict = {country:region for country, region in zip(country_dict["name"], country_dict["sub-region"])}
 	region_dict.update({
                     " Azerbaijan":"Western Asia",
                     "Bahamas  The":"Latin America and the Caribbean",
