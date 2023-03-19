@@ -32,3 +32,9 @@ for c in cov19.columns:
     
 cov19.columns = new_columns
 	""")
+	continent_dict = pd.read_csv("continents2.csv")
+	st.code("""
+countrycode = pd.read_csv("continents2.csv")
+countrycode
+	""")
+	content_dict
