@@ -6,8 +6,10 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 from streamlit_option_menu import option_menu
+st.set_page_config(layout="wide")
 
-cov19 = pd.read_csv("covid_19_data.csv")
+mypath = ""
+cov19 = pd.read_csv(mypath + "covid_19_data.csv")
 
 def clean_col(col):
     	col = col.strip()
@@ -20,7 +22,7 @@ for c in cov19.columns:
     	new_columns.append(clean_c)
 cov19.columns = new_columns
 
-countrycode = pd.read_csv("continents2.csv")
+countrycode = pd.read_csv(mypath + "continents2.csv")
 country_dict = {
                     " Azerbaijan":"Azerbaijan",
                     "Bahamas  The":"Bahamas",
@@ -35,6 +37,9 @@ country_dict = {
                     "The Gambia":"Gambia"
                    }
 cov19["Country"] = cov19.Country.replace(country_dict)	
+
+cov19["ObservationDate"] = pd.to_datetime(cov19["ObservationDate"])
+cov19.sort_values(["ObservationDate"]).reset_index(drop = True)
 
 region_dict = {country:region for country, region in zip(countrycode["name"], countrycode["sub-region"])}
 region_dict.update({
@@ -113,19 +118,13 @@ with st.sidebar:
 		)
 	
 if selected=='Data Cleaning':
-	st.title("The Cleaning Process: ")
-	
-	st.subheader("The Original Dataset ")
-	
-	cov19
-	
+	st.title("The Cleaning Process: ")	
 	st.subheader("Cleaning the columns ")
 	st.code("""	
 def clean_col(col):
     col = col.strip()
     col = col.replace("Country/Region", "Country")
     return col
-
 new_columns = []
 for c in cov19.columns:
     clean_c = clean_col(c)
@@ -230,13 +229,22 @@ cov19["Continent"] = cov19.Region.replace(continent_dict)
 	
 
 	st.subheader("Cleaned Data ")
-	cov19
+	st.dataframe(cov19)
 
-if selected=='Exploratory Analysis':
-	st.title("Exploratory Analysis: ")
-	country_option=st.selectbox('Select a country',np.sort(cov19['Country'].unique()))
-	case_option=st.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
-	
-	fig=px.scatter(cov19[cov19['Country']==country_option],x="ObservationDate",
-            y=cov19.loc[cov19['Country']==country_option,case_option],hover_name='ObservationDate', height = 800, width = 750)
-	st.plotly_chart(fig)
+if selected == 'Exploratory Analysis':
+    st.title("Exploratory Analysis: ")
+    st.subheader("Interactive Line Chart")
+    col1, col2 = st.columns([3,5])
+    with st.form("Interactive Line Chart"):
+        country_option=col1.selectbox('Select a country',np.sort(cov19['Country'].unique()))
+        case_option=col1.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
+        agg_option = col1.selectbox('Select how to aggregate data for duplicate dates',['Mean','Sum','Max', 'Min'])
+        submitted=st.form_submit_button("Submit to generate a line chart: ")
+        if submitted:
+            df1 = cov19.copy()
+            df1 = df1.groupby(['ObservationDate', 'Country']).agg(agg_option.lower()).reset_index()
+            fig=px.scatter(df1[df1['Country']==country_option],x="ObservationDate",
+            y=case_option,hover_name='ObservationDate', height = 800, width = 750)
+            col2.plotly_chart(fig)
+    
+    
