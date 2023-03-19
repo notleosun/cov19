@@ -239,4 +239,4 @@ if selected=='Exploratory Analysis':
 	
 	fig=px.scatter(cov19[cov19['Country']==country_option],x="ObservationDate",
             y=cov19.loc[cov19['Country']==country_option,case_option],hover_name='ObservationDate')
-	fig.show()
+	st.plotly_chart(fig)
