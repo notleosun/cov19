@@ -37,4 +37,4 @@ cov19.columns = new_columns
 countrycode = pd.read_csv("continents2.csv")
 countrycode
 	""")
-	content_dict
+	continent_dict
