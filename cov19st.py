@@ -16,7 +16,7 @@ with st.sidebar:
 		default_index = 0,
 		)
 	
-if selected=='Abstract':
+if selected=='Data Cleaning':
 	st.title("The cleaning process: ")
 	st.subheader("Cleaning the columns ")
 	st.markdown("""	
