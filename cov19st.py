@@ -228,5 +228,5 @@ cov19["Continent"] = cov19.Region.replace(continent_dict)
 
 if selected=='Exploratory Analysis':
 	st.title("Exploratory Analysis: ")
-	country_option=st.selectbox('Select a country',covid['Country/Region'].unique())
+	country_option=st.selectbox('Select a country',cov19['Country/Region'].unique())
 	case_option=st.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
