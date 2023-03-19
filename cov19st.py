@@ -51,12 +51,12 @@ cov19.columns = new_columns
 	cov19.columns = new_columns
 	
 	st.subheader("Cleaning Country Names ")
-	contrycode = pd.read_csv("continents2.csv")
+	countrycode = pd.read_csv("continents2.csv")
 	st.code("""
 countrycode = pd.read_csv("continents2.csv")
 countrycode
 	""")
-	contrycode
+	countrycode
 	
 	st.code("""
 country_dict = {
