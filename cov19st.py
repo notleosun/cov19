@@ -238,5 +238,5 @@ if selected=='Exploratory Analysis':
 	case_option=st.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
 	
 	fig=px.scatter(cov19[cov19['Country']==country_option],x="ObservationDate",
-            y=cov19.loc[cov19['Country']==country_option,case_option],hover_name='ObservationDate')
+            y=cov19.loc[cov19['Country']==country_option,case_option],hover_name='ObservationDate', height = 800, width = 750)
 	st.plotly_chart(fig)
