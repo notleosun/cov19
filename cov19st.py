@@ -9,10 +9,26 @@ from streamlit_option_menu import option_menu
 
 with st.sidebar: 
 	selected = option_menu(
-		menu_title = 'Navigation Pane',
-		options = ['Abstract', 'Background Information', 'Data Cleaning','Exploratory Analysis','Data Analysis', 'Conclusion', 'Bibliography'],
+		menu_title = 'Navigation',
+		options = ['Data Cleaning','Exploratory Analysis'],
 		menu_icon = 'arrow-down-right-circle-fill',
-		icons = ['bookmark-check', 'book', 'box', 'map', 'boxes', 'bar-chart', 
-		'check2-circle'],
+		icons = ['book', 'bar-chart'],
 		default_index = 0,
 		)
+	
+if selected=='Abstract':
+	st.title("The cleaning process: ")
+	st.subheader("Cleaning the columns ")
+	st.markdown("""	
+def clean_col(col):
+    col = col.strip()
+    col = col.replace("Country/Region", "Country")
+    return col
+
+new_columns = []
+for c in cov19.columns:
+    clean_c = clean_col(c)
+    new_columns.append(clean_c)
+    
+cov19.columns = new_columns
+	""")
