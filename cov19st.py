@@ -106,14 +106,24 @@ continent_dict.update({
 })
 cov19["Continent"] = cov19.Region.replace(continent_dict)
 
+num_cols = ["Confirmed", "Deaths", "Recovered"]
+cat_cols = ['ObservationDate', "Province/State", "Country", "Region", "Continent"]
 
+cov19_mean = cov19.groupby(cat_cols)
+cov19_mean[num_cols].agg("mean").reset_index()
+cov19_min = cov19.groupby(cat_cols)[num_cols].agg("min").reset_index()
+cov19_max = cov19.groupby(cat_cols)[num_cols].agg("max").reset_index()
+cov19_sum = cov19.groupby(cat_cols)
+cov19_sum[num_cols].agg("sum").reset_index()
+
+df_agg = {"Mean":cov19_mean, "Min":cov19_min, "Max":cov19_max, "Sum":cov19_sum}
 
 with st.sidebar: 
 	selected = option_menu(
 		menu_title = 'Navigation',
-		options = ['Data Cleaning','Exploratory Analysis'],
+		options = ['Data Cleaning','Exploratory Analysis', 'Data Analysis'],
 		menu_icon = 'arrow-down-right-circle-fill',
-		icons = ['book', 'bar-chart'],
+		icons = ['book', 'bar-chart', 'boxes'],
 		default_index = 0,
 		)
 	
@@ -137,7 +147,7 @@ cov19.columns = new_columns
 countrycode = pd.read_csv("continents2.csv")
 countrycode
 	""")
-	countrycode
+	st.dataframe(countrycode.head(10))
 	st.subheader("Cleaning Country Names ")
 	st.code("""
 country_dict = {
@@ -229,22 +239,87 @@ cov19["Continent"] = cov19.Region.replace(continent_dict)
 	
 
 	st.subheader("Cleaned Data ")
-	st.dataframe(cov19)
-
+	st.dataframe(cov19.head(10))
+    
 if selected == 'Exploratory Analysis':
     st.title("Exploratory Analysis: ")
     st.subheader("Interactive Line Chart")
     col1, col2 = st.columns([3,5])
     with st.form("Interactive Line Chart"):
-        country_option=col1.selectbox('Select a country',np.sort(cov19['Country'].unique()))
-        case_option=col1.selectbox('Select cases',['Confirmed','Deaths','Recovered'])
-        agg_option = col1.selectbox('Select how to aggregate data for duplicate dates',['Mean','Sum','Max', 'Min'])
+        country_option=col1.selectbox('Select a country:',np.sort(cov19['Country'].unique()), key = 2)
+        case_option=col1.selectbox('Select cases:',['Confirmed','Deaths','Recovered'], key=4)
+        agg_option = col1.selectbox('Select how to aggregate data for duplicate dates:',['Mean','Sum','Max', 'Min'], key = 10)
         submitted=st.form_submit_button("Submit to generate a line chart: ")
         if submitted:
-            df1 = cov19.copy()
-            df1 = df1.groupby(['ObservationDate', 'Country']).agg(agg_option.lower()).reset_index()
+            df1 = df_agg[agg_option]
             fig=px.scatter(df1[df1['Country']==country_option],x="ObservationDate",
             y=case_option,hover_name='ObservationDate', height = 800, width = 750)
             col2.plotly_chart(fig)
     
+    st.subheader("Interactive Comparison")        
+    col3, col4 = st.columns([3,5])
+    with st.form("Interactive Comparison"):
+        country_option2=col3.multiselect('Select up to 5 countries',cov19['Country'].unique(),max_selections=5,default=['Afghanistan'])
+        case_option2=col3.selectbox('Select cases:',['Confirmed','Deaths','Recovered'], key=5)
+        agg_option2 = col3.selectbox('Select how to aggregate data for duplicate dates:',['Mean','Sum','Max', 'Min'], key = 11)
+        log_option2 = col3.checkbox('log() the y-axis?')
+        submitted2=st.form_submit_button("Submit to compare between countries: ")
+        if submitted2:
+            df2 = df_agg[agg_option2]
+            fig2=px.scatter(df2[df2['Country'].isin(country_option2)],x="ObservationDate",
+            y=case_option2,hover_name='ObservationDate', height = 800, width = 750, color='Country', log_y = log_option2)
+            col4.plotly_chart(fig2)
+            
+    st.subheader("Interactive Bar Chart")
+    col5, col6 = st.columns([3,5])
+    with st.form("Interactive Bar Chart"):
+        country_option3=col5.selectbox('Select a country:',np.sort(cov19['Country'].unique()), key = 3)
+        case_option3=col5.selectbox('Select cases:',['Confirmed','Deaths','Recovered'], key=6)
+        agg_option3 = col5.selectbox('Select how to aggregate data for duplicate dates:',['Mean','Sum','Max', 'Min'], key = 12)
+        submitted3=st.form_submit_button("Submit to generate a bar chart: ")
+        if submitted3:
+            df3 = df_agg[agg_option3]
+            fig3=px.bar(df3[df3['Country']==country_option3], x="ObservationDate",
+            y=case_option3,hover_name='ObservationDate', height = 800, width = 750)
+            col6.plotly_chart(fig3)
+            
+    st.subheader("Interactive World Map")
+    col7, col8 = st.columns([3,5])
+    with st.form("Interactive World Map"):
+        case_option4=col7.selectbox('Select cases:',['Confirmed','Deaths','Recovered'], key=7)
+        agg_option4 = col7.selectbox('Select how to aggregate data for duplicate dates:',['Mean','Sum','Max', 'Min'], key = 13)
+        submitted4=st.form_submit_button("Submit to generate a world map: ")
+        if submitted4:
+            df4 = df_agg[agg_option4]
+            fig4= px.choropleth(cov19.groupby("Country").sum().reset_index(), 
+              locations = "Country", 
+              locationmode = "country names", 
+              color = case_option4, 
+              scope = "world",
+             )
+            col8.plotly_chart(fig4)
+            
+    st.subheader("Interactive Comparison Between Continents")
+    col9, col10 = st.columns([3,5])
+    with st.form("Interactive Comparison Between Continents"):
+        case_option5=col9.selectbox('Select cases:',['Confirmed','Deaths','Recovered'], key=8)
+        agg_option5 = col9.selectbox('Select how to aggregate data for duplicate dates:',['Mean','Sum','Max', 'Min'], key = 14)
+        region_option=col9.multiselect('Select up to 5 regions',cov19['Region'].unique(),max_selections=5,default=['Southern Asia'])
+        submitted5=st.form_submit_button("Submit to generate a bar chart: ")
+        if submitted5:
+            df5 = df_agg[agg_option5]
+            fig5= px.line(df5[df5['Region']==region_option], x = "Region", y = case_option, color = "Region")
+            col10.plotly_chart(fig5)
+            
+if selected=='Data Analysis':
+    st.title("Top 3 countries in confirmed cases: ")
+    country_optionss1 = ["US", "India", "France"]
+    case_options1 = "Confirmed"
+    figs1=px.scatter(cov19_sum[cov19_sum['Country'].isin(country_optionss1)],x="ObservationDate",
+    y=case_options1,hover_name='ObservationDate', height = 800, width = 750, color='Country')
+    st.plotly_chart(figs1)
     
+    st.title("Growth of confirmed cases in China: ")
+    figcn=px.scatter(cov19_sum[cov19_sum['Country']=="China"],x="ObservationDate",
+    y="Confirmed",hover_name='ObservationDate', height = 800, width = 750)
+    st.plotly_chart(figcn)
