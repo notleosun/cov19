@@ -303,7 +303,7 @@ if selected == 'Exploratory Analysis':
     col9, col10 = st.columns([3,5])
     with st.form("Interactive Comparison Between Continents"):
         case_option5=col9.selectbox('Select cases:', num_cols, key=8)
-        cat_option=col9.selectbox('Select cases:', cat_cols, key=8)
+        cat_option=col9.selectbox('Select cases:', cat_cols, key=20)
         submitted5=st.form_submit_button("Submit to generate a bar chart: ")
         if submitted5:
             fig5= px.line(cov19[cov19['Region']==region_option], x = "Region", y = case_option, color = "Region")
