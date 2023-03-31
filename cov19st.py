@@ -302,8 +302,8 @@ if selected == 'Exploratory Analysis':
     st.subheader("Interactive Comparison Between Continents")
     col9, col10 = st.columns([3,5])
     with st.form("Interactive Comparison Between Continents"):
-        case_option5=col9.selectbox('Select cases:',['Confirmed','Deaths','Recovered'], key=8)
-        agg_option5 = col9.selectbox('Select how to aggregate data for duplicate dates:',['Mean','Sum','Max', 'Min'], key = 14)
+        case_option5=col9.selectbox('Select cases:', num_cols, key=8)
+        agg_option5 = col9.selectbox('Select how to aggregate data for duplicate dates:',['Max', 'Min'], key = 14)
         region_option=col9.multiselect('Select up to 5 regions',cov19['Region'].unique(),max_selections=5,default=['Southern Asia'])
         submitted5=st.form_submit_button("Submit to generate a bar chart: ")
         if submitted5:
