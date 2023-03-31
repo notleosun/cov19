@@ -109,11 +109,11 @@ cov19["Continent"] = cov19.Region.replace(continent_dict)
 num_cols = ["Confirmed", "Deaths", "Recovered"]
 cat_cols = ['ObservationDate', "Province/State", "Country", "Region", "Continent"]
 
-cov19_mean = cov19.groupby(cat_cols)
+cov19_mean = cov19.groupby(['ObservationDate', "Country"])
 cov19_mean[num_cols].agg("mean").reset_index()
-cov19_min = cov19.groupby(cat_cols)[num_cols].agg("min").reset_index()
-cov19_max = cov19.groupby(cat_cols)[num_cols].agg("max").reset_index()
-cov19_sum = cov19.groupby(cat_cols)
+cov19_min = cov19.groupby(['ObservationDate', "Country"])[num_cols].agg("min").reset_index()
+cov19_max = cov19.groupby(['ObservationDate', "Country"])[num_cols].agg("max").reset_index()
+cov19_sum = cov19.groupby(['ObservationDate', "Country"])
 cov19_sum[num_cols].agg("sum").reset_index()
 
 df_agg = {"Mean":cov19_mean, "Min":cov19_min, "Max":cov19_max, "Sum":cov19_sum}
@@ -299,16 +299,14 @@ if selected == 'Exploratory Analysis':
              )
             col8.plotly_chart(fig4)
             
-    st.subheader("Interactive Comparison Between Continents")
+    st.subheader("Interactive Comparison Between Categorical and Numerical Variables")
     col9, col10 = st.columns([3,5])
     with st.form("Interactive Comparison Between Continents"):
         case_option5=col9.selectbox('Select cases:', num_cols, key=8)
-        agg_option5 = col9.selectbox('Select how to aggregate data for duplicate dates:',['Max', 'Min'], key = 14)
-        region_option=col9.multiselect('Select up to 5 regions',cov19['Region'].unique(),max_selections=5,default=['Southern Asia'])
+        cat_option=col9.selectbox('Select cases:', cat_cols, key=8)
         submitted5=st.form_submit_button("Submit to generate a bar chart: ")
         if submitted5:
-            df5 = df_agg[agg_option5]
-            fig5= px.line(df5[df5['Region']==region_option], x = "Region", y = case_option, color = "Region")
+            fig5= px.line(cov19[cov19['Region']==region_option], x = "Region", y = case_option, color = "Region")
             col10.plotly_chart(fig5)
             
 if selected=='Data Analysis':
